@@ -8,7 +8,7 @@ NC='\033[0m'
 # FUNCTIONS
 
 function checkDB() {
-    if [ -z "$(mysql -u $dbuser -p$dbpass -e "SHOW DATABASES LIKE '$1'" | grep $1)" ]; then
+    if [ -z "$(mysql -u $dbuser -p$dbpass -e "SHOW DATABASES LIKE '$1'" 2>&1 | grep -v "Warning: Using a password" | grep $1)" ]; then
     echo "${RED}[ * ]${NC} Database ${BLUE}$1${NC} does not exist"
     exit 1
 fi
@@ -29,9 +29,9 @@ fi
 function extractData() {
     # If table is empty extract database else extract table
     if [ -z $2 ]; then
-    mysqldump -u $dbuser -p$dbpass $1 > $(pwd)/$1.sql
+    mysqldump -u $dbuser -p$dbpass $1 2>&1 | grep -v "Warning: Using a password"> $(pwd)/$1.sql
     else
-    mysqldump -u $dbuser -p$dbpass $1 $2 > $(pwd)/$2.sql
+    mysqldump -u $dbuser -p$dbpass $1 $2 2>&1 | grep -v "Warning: Using a password" > $(pwd)/$2.sql
     fi
 }
 
@@ -59,8 +59,8 @@ read -p "$(echo $YELLOW"[ ? ] "$NC) Enter database table: " dbtable
 extractData $dbname $dbtable
 
 if [ $? -eq 0 ]; then
-    echo "${GREEN}[ * ]${NC} Data extracted successfully!"
-    echo "${GREEN}[ * ]${NC} Check $(pwd)/$dbname.sql"
+    echo "${GREEN}[ * ]${NC}  Data extracted successfully!"
+    echo "${GREEN}[ * ]${NC}  Check $(pwd)/$dbname.sql"
     exit 0
 else
     echo "${RED}[ * ]${NC} Error while extracting data try again"
