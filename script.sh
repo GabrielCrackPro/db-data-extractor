@@ -6,7 +6,6 @@ BLUE='\033[1;34m'
 NC='\033[0m'
 
 # FUNCTIONS
-
 function checkDB() {
     if [ -z "$(mysql -u $dbuser -p$dbpass -e "SHOW DATABASES LIKE '$1'" 2>&1 | grep -v "Warning: Using a password" | grep $1)" ]; then
     echo "${RED}[ * ]${NC} Database ${RED}$1${NC} does not exist"
@@ -28,6 +27,12 @@ function checkTable() {
     exit 1
 fi
 }
+function showDatabases() {
+    mysql -u $dbuser -p$dbpass -e "SHOW DATABASES;" | grep -v "Warning: Using a password" | grep -v Database | grep -v information_schema | grep -v performance_schema | grep -v mysql
+}
+function showTables() {
+    mysql -u $dbuser -p$dbpass -e "SHOW TABLES FROM $1;" | grep -v "Warning: Using a password" | grep -v Tables_in
+}
 
 function extractData() {
     # If table is empty extract database else extract table
@@ -44,27 +49,48 @@ echo "\n"
 
 sleep 1
 
-read -p "$(echo $BLUE"[ ? ] "$NC)Enter database $(echo $BLUE"user"$NC): "  dbuser 
+read -p "$(echo $BLUE"[ ? ] "$NC) Enter SQL $(echo $BLUE"user"$NC): "  dbuser 
 # Check if database user is not empty
 checkEmpty $dbuser
-read -s -p "$(echo $BLUE"[ ? ] "$NC)Enter database $(echo $BLUE"password"$NC): " dbpass
+read -s -p "$(echo $BLUE"[ ? ] "$NC) Enter SQL $(echo $BLUE"password"$NC): " dbpass
 echo
 # Check if database password is not empty
 checkEmpty $dbpass
-read  -p "$(echo $BLUE"[ ? ] "$NC)Enter database $(echo $BLUE"name"$NC): " dbname
+# Show databases
+echo "${GREEN}[ * ]${NC} Showing $(echo $GREEN"databases"$NC)..."
+sleep 1
+echo
+showDatabases
+echo
+
+read  -p "$(echo $BLUE"[ ? ] "$NC) Enter database $(echo $BLUE"name"$NC): " dbname
 # Check if database name is not empty
 checkEmpty $dbname
 checkDB $dbname
-read -p "$(echo $BLUE"[ ? ] "$NC)Enter database $(echo $BLUE"table"$NC): " dbtable
+# Show tables
+echo "${GREEN}[ * ]${NC} Showing $(echo $GREEN"tables"$NC) in $(echo $GREEN"$dbname"$NC)..."
+sleep 1
+echo
+showTables $dbname
+echo
+read -p "$(echo $BLUE"[ ? ] "$NC) Enter database $(echo $BLUE"table"$NC): " dbtable
 
 
 extractData $dbname $dbtable
 
 if [ $? -eq 0 ]; then
-    echo "${GREEN}[ * ]${NC}Data extracted successfully!"
-    echo "${GREEN}[ * ]${NC}Check $(pwd)/$dbname.sql"
+    echo
+    echo "${GREEN}[ * ]${NC} Extracting data from database $(echo $GREEN"$dbname"$NC)"
+    echo
+    sleep 1
+    echo "${GREEN}[ * ]${NC} Data extracted successfully!"
+    echo
+    echo "${GREEN}[ * ]${NC} Check $(pwd)/$dbname.sql"
+    sleep 0.5
+    echo "${GREEN}[ * ]${NC} Exiting..."
     exit 0
 else
-    echo "${RED}[ * ]${NC}Error while extracting data try again"
+    echo "${RED}[ * ]${NC} Error while extracting data try again"
+    echo "${RED}[ * ]${NC} Exiting..."
     exit 1
 fi
