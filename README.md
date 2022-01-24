@@ -1,7 +1,7 @@
 # DB Data Extractor
 
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/GabrielCrackPro/db-data-extractor/master/LICENSE)
-<img src="https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white" alt="sql-logo">
+<img src="https://img.shields.io/badge/MySQL-ffffff?style=for-the-badge&logo=mysql&logoColor=black" alt="sql-logo">
 
 Script that dumps database information using [MySQLDump](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html)
 
