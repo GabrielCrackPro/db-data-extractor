@@ -7,9 +7,23 @@ Script that dumps database information using [MySQLDump](https://dev.mysql.com/d
 ## Usage
 
 - Run the script with the following command: <br>
-  <code>./script.sh</code> <br>
+
+```
+./script.sh
+```
+
 - If the command doesn't work, try to give it executable permissions with the following command: <br>
-  <code>chmod +x script.sh</code>
+
+  ```
+    chmod +x script.sh
+  ```
+
+  If you want to run the script from anywhere, you can create an alias for it: <br>
+  put the following line in your .bashrc or .zshrc file: <br>
+
+  ```
+      alias dump="sh path/to/script.sh"
+  ```
 
 ## Requirements
 
