@@ -18,12 +18,12 @@ Script that dumps database information using [MySQLDump](https://dev.mysql.com/d
     chmod +x script.sh
   ```
 
-  If you want to run the script from anywhere, you can create an alias for it: <br>
-  put the following line in your .bashrc or .zshrc file: <br>
+If you want to run the script from anywhere, you can create an alias for it: <br>
+Put the following line in your .bashrc or .zshrc file: <br>
 
-  ```
-      alias dump="sh path/to/script.sh"
-  ```
+```
+    alias dump="sh path/to/script.sh"
+```
 
 ## Requirements
 
